@@ -1,5 +1,7 @@
 from particlefile import Particle
+from psofile import PSO
 
 if __name__ == '__main__':
-    part = Particle(3, [0, 9])
-    print(part.position)
+    pso = PSO(10, 2, bound=[0, 9])
+    pso.viewPosition()
+    pso.viewFitness()

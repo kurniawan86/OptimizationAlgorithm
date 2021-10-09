@@ -1,16 +1,17 @@
 import random
 class Particle:
     position = []
-    fitness = []
+    fitness = 0
     pbest = []
-    velocity = []
-    ndim = 0
+    velocity = 0
+    ndim = None
     bound = None
 
     def __init__(self, ndim, bound=None):
         self.ndim = ndim
         self.bound = bound
         self.__initPosition()
+        self.__initPbest()
 
     def __initPositionNoBound(self):
         gen = []
@@ -33,5 +34,7 @@ class Particle:
         else:
             self.position = self.__initPositionBound()
 
-
-
+    def __initPbest(self):
+        pbest = []
+        pbest = self.position
+        self.pbest = pbest

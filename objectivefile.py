@@ -1,4 +1,5 @@
 import math
+
 class Objective:
     def __init__(self):
         pass
