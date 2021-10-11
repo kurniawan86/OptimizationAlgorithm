@@ -1,7 +1,10 @@
-from particlefile import Particle
+
 from psofile import PSO
 
 if __name__ == '__main__':
-    pso = PSO(10, 2, bound=[0, 9])
-    pso.viewPosition()
-    pso.viewFitness()
+    nPopulasi = 100
+    nDim = 2
+    inersia = 1
+    maximini = 'min'
+    maxloop = 100
+    pso = PSO(nPopulasi, nDim, inersia, maximini, maxloop, bound=[0, 9])

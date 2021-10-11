@@ -1,8 +1,11 @@
 import random
+import numpy as np
+
 class Particle:
     position = []
     fitness = 0
-    pbest = []
+    pbestPosition = []
+    pbestFitness = 0
     velocity = 0
     ndim = None
     bound = None
@@ -11,7 +14,7 @@ class Particle:
         self.ndim = ndim
         self.bound = bound
         self.__initPosition()
-        self.__initPbest()
+        self.__initPbestPos()
 
     def __initPositionNoBound(self):
         gen = []
@@ -34,7 +37,39 @@ class Particle:
         else:
             self.position = self.__initPositionBound()
 
-    def __initPbest(self):
-        pbest = []
-        pbest = self.position
-        self.pbest = pbest
+    def __initPbestPos(self):
+        pbestpos = 0
+        pbestpos = self.position
+        self.pbestPosition = pbestpos
+
+    def initPbestFitness(self, fit):
+        self.pbestFitness = fit
+
+    def calculateVelocity(self, gbest, w):
+        X = np.array(self.position)
+        pbest = np.array(self.pbestPosition)
+        gbest = np.array(gbest)
+        velo1 = random.random()*(pbest-X)
+        velo2 = random.random()*(gbest-X)
+        result = w * self.velocity+velo1+velo2
+        return result
+
+    def updatePosition(self):
+        position = self.position+self.velocity
+        self.position = position
+
+    def updatePbest(self, maximini):
+        if maximini == 'min':
+            self.__updatePbestMini()
+        else:
+            self.__updatePbestMax()
+
+    def __updatePbestMax(self):
+        if self.fitness > self.pbestFitness:
+            self.pbestFitness = self.fitness
+            self.pbestPosition = self.position
+
+    def __updatePbestMini(self):
+        if self.fitness < self.pbestFitness:
+            self.pbestFitness = self.fitness
+            self.pbestPosition = self.position

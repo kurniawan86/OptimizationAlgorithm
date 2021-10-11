@@ -1,22 +1,57 @@
 from particlefile import Particle
 from objectivefile import Objective
+import matplotlib.pyplot as plt
 
 class PSO:
     nSwarm = 0
     swarm = None
     obj = Objective()
     fit = []
-    gbest = []
+    gbest = 0
+    __maximini = 'min'
+    __maxloop = 0
+    bound = None
+    nDim = 0
+    w = 0
 
-    def __init__(self, nPop, nDim, bound=None):
+    def __init__(self, nPop, nDim, inersia, maximini, maxloop, bound=None):
+        self.w = inersia
+        self.nDim = nDim
+        self.bound = bound
+        self.__maximini = maximini
+        self.__maxloop = maxloop
         self.nSwarm = nPop
-        self.initPosition(nDim, bound=bound)
-        self.calculateFitness()
+        #########################
+        self.initprocess()
+        #########################
+        self.mainloop()
 
-    def initPosition(self, ndim, bound=None):
+    def initprocess(self):
+        self.initPosition()
+        self.calculateFitness()
+        self.initPbestFitness()
+        self.findGbest()
+        self.calVelocity()
+        self.updatePositionSwarm()
+
+    def mainloop(self):
+        gvalue = []
+        for i in range(self.__maxloop):
+            self.calculateFitness()
+            self.updatePbest()
+            self.findGbest()
+            self.calVelocity()
+            self.updatePositionSwarm()
+            gvalue.append(self.swarm[self.gbest].pbestFitness)
+        plt.plot(gvalue)
+        plt.show()
+        print("BEST VALUE :", gvalue[self.__maxloop-1])
+        print("BEST Vaariable:", self.swarm[self.gbest].pbestPosition)
+
+    def initPosition(self):
         swarm = []
         for i in range(self.nSwarm):
-            swarm.append(Particle(ndim, bound=bound))
+            swarm.append(Particle(self.nDim, bound=self.bound))
         self.swarm = swarm
 
     def viewPosition(self):
@@ -26,7 +61,7 @@ class PSO:
 
     def viewFitness(self):
         for i in range(self.nSwarm):
-            print("fitness :", i, ": ",
+            print("fitness :", i+1, ": ",
                   self.swarm[i].fitness)
 
     def calculateFitness(self):
@@ -34,3 +69,59 @@ class PSO:
             fit = (self.obj.Rosenbrock2D(
                 self.swarm[i].position))
             self.swarm[i].fitness = fit
+
+    def initPbestFitness(self):
+        for i in range(self.nSwarm):
+            self.swarm[i].initPbestFitness(
+                self.swarm[i].fitness)
+
+    def viewVelocity(self):
+        for i in range(self.nSwarm):
+            print("velo-",i+1,"=", self.swarm[i].velocity)
+
+    def viewPbestFitness(self):
+        for i in range(self.nSwarm):
+            print("pbestF-",i+1,"=", self.swarm[i].pbestFitness)
+
+    def viewPbestPositiion(self):
+        for i in range(self.nSwarm):
+            print("pbestP-",i+1,"=", self.swarm[i].pbestPosition)
+
+    def __findGbestMax(self):
+        max = self.swarm[0].fitness
+        index = 0
+        for i in range(self.nSwarm):
+            if max < self.swarm[i].pbestFitness:
+                max = self.swarm[i].pbestFitness
+                index = i
+        return index
+
+    def __findGbestMin(self):
+        mini = self.swarm[0].fitness
+        index = 0
+        for i in range(self.nSwarm):
+            if mini > self.swarm[i].pbestFitness:
+                mini = self.swarm[i].pbestFitness
+                index = i
+        return index
+
+    def findGbest(self):
+        if self.__maximini == 'max':
+            self.gbest = self.__findGbestMax()
+        else:
+            self.gbest = self.__findGbestMin()
+
+    def calVelocity(self):
+        gbest = self.swarm[self.__findGbestMin()].pbestPosition
+        for i in range(self.nSwarm):
+            velo = self.swarm[i].calculateVelocity(
+                gbest, self.w)
+            self.swarm[i].velocity = velo
+
+    def updatePositionSwarm(self):
+        for i in range(self.nSwarm):
+            self.swarm[i].updatePosition()
+
+    def updatePbest(self):
+        for i in range(self.nSwarm):
+            self.swarm[i].updatePbest(self.__maximini)
