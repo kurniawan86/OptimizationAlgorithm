@@ -13,8 +13,10 @@ class PSO:
     bound = None
     nDim = 0
     w = 0
+    function_name = None
 
-    def __init__(self, nPop, nDim, inersia, maximini, maxloop, bound=None):
+    def __init__(self, nPop, nDim, inersia, maximini, maxloop, Function=None, bound=None):
+        self.function_name = Function
         self.w = inersia
         self.nDim = nDim
         self.bound = bound
@@ -65,10 +67,11 @@ class PSO:
                   self.swarm[i].fitness)
 
     def calculateFitness(self):
-        for i in range(self.nSwarm):
-            fit = (self.obj.Rosenbrock2D(
-                self.swarm[i].position))
-            self.swarm[i].fitness = fit
+        if self.function_name == 'Rosenbrock':
+            for i in range(self.nSwarm):
+                fit = (self.obj.Rosenbrock2D(
+                    self.swarm[i].position))
+                self.swarm[i].fitness = fit
 
     def initPbestFitness(self):
         for i in range(self.nSwarm):

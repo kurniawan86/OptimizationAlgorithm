@@ -7,4 +7,4 @@ if __name__ == '__main__':
     inersia = 1
     maximini = 'min'
     maxloop = 100
-    pso = PSO(nPopulasi, nDim, inersia, maximini, maxloop, bound=[0, 9])
+    pso = PSO(nPopulasi, nDim, inersia, maximini, maxloop, Function='Rosenbrock')
