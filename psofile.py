@@ -50,6 +50,9 @@ class PSO:
         print("BEST VALUE :", gvalue[self.__maxloop-1])
         print("BEST Vaariable:", self.swarm[self.gbest].pbestPosition)
 
+    def getVariableOptimal(self):
+        return self.swarm[self.gbest].pbestPosition
+
     def initPosition(self):
         swarm = []
         for i in range(self.nSwarm):
