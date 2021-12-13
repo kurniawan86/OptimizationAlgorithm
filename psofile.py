@@ -72,6 +72,11 @@ class PSO:
                 fit = (self.obj.Rosenbrock2D(
                     self.swarm[i].position))
                 self.swarm[i].fitness = fit
+        elif self.function_name == 'koefesienDiesel':
+            for i in range(self.nSwarm):
+                fit = (self.obj.koefesienDiesel(
+                    self.swarm[i].position))
+                self.swarm[i].fitness = fit
 
     def initPbestFitness(self):
         for i in range(self.nSwarm):
