@@ -1,4 +1,5 @@
 from psofile import PSO
+from GAfile import GA
 from objectivefile import *
 
 class Optimization:
@@ -29,6 +30,15 @@ class Optimization:
     def mainMethod(self):
         if self.algo == 'PSO':
             self.PSO_algorithm()
+        elif self.algo == 'GA':
+            self.GA_algorithm()
+
+    def GA_algorithm(self):
+        nPop = 50
+        nDim = 4
+        obj = GA(nPop, nDim, self.obj)
+        obj.initPosition()
+        obj.viewPosition()
 
     def PSO_algorithm(self):
         nPopulasi = 50
