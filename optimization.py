@@ -38,7 +38,12 @@ class Optimization:
         nDim = 4
         obj = GA(nPop, nDim, self.obj)
         obj.initPosition()
-        obj.viewPosition()
+        # obj.viewPosition()
+        obj.calFitness()
+        obj.viewFitness()
+        obj.getGbest()
+        print(obj.bestInd)
+        print(obj.bestFitness)
 
     def PSO_algorithm(self):
         nPopulasi = 50

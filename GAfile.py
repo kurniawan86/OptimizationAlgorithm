@@ -3,6 +3,8 @@ class gen:
     __ndim = None
     __bound = None
     position = []
+    fitness = 0
+    
     def __init__(self, nDim, bound=None):
         self.__ndim = nDim
         self.__bound = bound
@@ -38,13 +40,14 @@ class GA:
     nDim = 0
     bound = None
     function = None
+    bestInd = None
+    bestFitness = 0
 
     def __init__(self, nPop, nDim, Function=None, bound=None):
         self.nPop = nPop
         self.nDim = nDim
         self.bound = bound
         self.function = Function
-        print(self.function)
 
     def initPosition(self):
         swarm = []
@@ -55,3 +58,27 @@ class GA:
     def viewPosition(self):
         for i in range(self.nPop):
             print("no :", i, ": ",self.pop[i].position)
+    
+    def calFitness(self):
+        for i in range(self.nPop):
+            fit = (self.function.fitness(
+                self.pop[i].position))
+            self.pop[i].fitness = fit
+    
+    def viewFitness(self):
+        for i in range(self.nPop):
+            print("fitness : ", self.pop[i].fitness)
+            
+    def getGbest(self):
+        i = self.__findGbestMin()
+        self.bestInd = self.pop[i].position
+        self.bestFitness = self.pop[i].fitness
+    
+    def __findGbestMin(self):
+        mini = self.pop[0].fitness
+        index = 0
+        for i in range(self.nPop):
+            if mini > self.pop[i].fitness:
+                index = i
+                mini = self.pop[i].fitness
+        return index
