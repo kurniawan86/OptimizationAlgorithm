@@ -1,11 +1,9 @@
 from particlefile import Particle
-from objectivefile import Objective
 import matplotlib.pyplot as plt
 
 class PSO:
     nSwarm = 0
     swarm = None
-    obj = Objective()
     fit = []
     gbest = 0
     __maximini = 'min'
@@ -13,10 +11,10 @@ class PSO:
     bound = None
     nDim = 0
     w = 0
-    function_name = None
+    function = None
 
     def __init__(self, nPop, nDim, inersia, maximini, maxloop, Function=None, bound=None):
-        self.function_name = Function
+        self.function = Function
         self.w = inersia
         self.nDim = nDim
         self.bound = bound
@@ -70,16 +68,10 @@ class PSO:
                   self.swarm[i].fitness)
 
     def calculateFitness(self):
-        if self.function_name == 'Rosenbrock':
-            for i in range(self.nSwarm):
-                fit = (self.obj.Rosenbrock2D(
-                    self.swarm[i].position))
-                self.swarm[i].fitness = fit
-        elif self.function_name == 'koefesienDiesel':
-            for i in range(self.nSwarm):
-                fit = (self.obj.koefesienDiesel(
-                    self.swarm[i].position))
-                self.swarm[i].fitness = fit
+        for i in range(self.nSwarm):
+            fit = (self.function.fitness(
+                self.swarm[i].position))
+            self.swarm[i].fitness = fit
 
     def initPbestFitness(self):
         for i in range(self.nSwarm):
