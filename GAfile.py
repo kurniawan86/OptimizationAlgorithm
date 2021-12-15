@@ -1,4 +1,6 @@
 import random
+import numpy as np
+
 class gen:
     __ndim = None
     __bound = None
@@ -82,3 +84,10 @@ class GA:
                 index = i
                 mini = self.pop[i].fitness
         return index
+
+    def selec_turnamen(self):
+        selec = np.random.randint(self.nPop)
+        for xi in np.random.randint(0,self.nPop,3):
+            if self.pop[xi].fitness < self.pop[selec].fitness:
+                selec = xi
+        return self.pop[selec].position

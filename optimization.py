@@ -40,10 +40,11 @@ class Optimization:
         obj.initPosition()
         # obj.viewPosition()
         obj.calFitness()
-        obj.viewFitness()
+        # obj.viewFitness()
         obj.getGbest()
-        print(obj.bestInd)
-        print(obj.bestFitness)
+        # print(obj.bestInd)
+        # print(obj.bestFitness)
+        print(obj.selec_turnamen())
 
     def PSO_algorithm(self):
         nPopulasi = 50
