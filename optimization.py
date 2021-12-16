@@ -34,9 +34,12 @@ class Optimization:
             self.GA_algorithm()
 
     def GA_algorithm(self):
-        nPop = 50
-        nDim = 4
-        obj = GA(nPop, nDim, self.obj)
+        nPop = 5
+        nDim = 2
+        Cr = 0.8
+        maxloop = 20
+        Mr = 0.2
+        obj = GA(nPop, nDim,maxloop, self.obj)
         obj.initPosition()
         # obj.viewPosition()
         obj.calFitness()
@@ -44,11 +47,13 @@ class Optimization:
         obj.getGbest()
         # print(obj.bestInd)
         # print(obj.bestFitness)
-        print(obj.selec_turnamen())
+        # print(obj.selec_turnamen())
+        # obj.pickParent()
+        obj.mainAlgorithm(Cr,Mr)
 
     def PSO_algorithm(self):
         nPopulasi = 50
-        nDim = 4
+        nDim = 2
         inersia = 1
         maximini = 'min'
         maxloop = 100

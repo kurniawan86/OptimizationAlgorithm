@@ -1,5 +1,10 @@
 import random
 import numpy as np
+import numpy.random as rnd
+import math
+
+from matplotlib import pyplot as plt
+
 
 class gen:
     __ndim = None
@@ -44,12 +49,17 @@ class GA:
     function = None
     bestInd = None
     bestFitness = 0
+    loop = 0
+    nElit = 0
+    newpop = []
 
-    def __init__(self, nPop, nDim, Function=None, bound=None):
+    def __init__(self, nPop, nDim, max_itarasi,Function=None, bound=None):
+        self.loop = max_itarasi
         self.nPop = nPop
         self.nDim = nDim
         self.bound = bound
         self.function = Function
+
 
     def initPosition(self):
         swarm = []
@@ -85,9 +95,69 @@ class GA:
                 mini = self.pop[i].fitness
         return index
 
-    def selec_turnamen(self):
+    def __selec_turnamen(self):
         selec = np.random.randint(self.nPop)
         for xi in np.random.randint(0,self.nPop,3):
             if self.pop[xi].fitness < self.pop[selec].fitness:
                 selec = xi
         return self.pop[selec].position
+
+    def pickParent(self):
+        selected = [self.__selec_turnamen() for _ in range(self.nPop)]
+        return selected
+
+    def crossover(self, p1, p2, Cr):
+        offspring = []
+        c1 = rnd.rand()
+        c2 = 1-c1
+        offspring1 , offspring2 = p1.copy(), p2.copy()
+        if rnd.rand() < Cr:
+            offspring1 = list(np.array(offspring1)*c1)
+            offspring2 = list(np.array(offspring2)*c2)
+        self.add_newPop(offspring1)
+        self.add_newPop(offspring2)
+
+    def mutation(self,Mr):
+        mut = math.floor(self.nPop * Mr)
+        for i in range(mut):
+            child = []
+            for j in range(self.nDim):
+                child.append(rnd.rand())
+            self.add_newPop(child)
+
+    def elitisme(self):
+        n = self.nPop
+        if n % 2 == 0:
+            self.add_newPop(self.bestInd)
+            self.add_newPop(self.bestInd)
+            self.nElit = 2
+        else:
+            self.add_newPop(self.bestInd)
+            self.nElit = 1
+
+    def add_newPop(self, pop):
+        self.newpop.append(pop)
+
+    def replacePop(self):
+        for i in range(self.nPop):
+            self.pop[i].position = self.newpop[i]
+        self.newpop = []
+
+    def mainAlgorithm(self, cr,mr):
+        self.initPosition()
+        error = []
+        for i in range(self.loop):
+            self.calFitness()   #calculate Fitness
+            self.getGbest()     #find Gbest
+            self.elitisme()     #elitisme
+            #crossover
+            for i in range(
+                    self.nElit,self.nPop-math.floor(mr*self.nPop),2):
+                selected = self.pickParent()
+                self.crossover(selected[i],selected[i+1],cr)
+            self.mutation(mr)   #mutation
+            self.replacePop()   #replace oldPop with newPop
+            error.append(self.bestFitness)
+        plt.plot(error)
+        plt.show()
+            # print("best individu =",self.bestInd)

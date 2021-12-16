@@ -17,4 +17,4 @@ if __name__ == '__main__':
     # * Griewank
 
     ##testing for every one
-    optimal = Optimization(algoritma='GA', objFunction='Griewank')
+    optimal = Optimization(algoritma='GA', objFunction='Rastrigin')
