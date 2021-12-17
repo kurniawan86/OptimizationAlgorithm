@@ -39,7 +39,7 @@ class gen:
             self.position = self.__initPositionBound()
 
     def viewPosition(self):
-        print(self.__position)
+        print(self.position)
 
 class GA:
     nPop = None
@@ -52,14 +52,15 @@ class GA:
     loop = 0
     nElit = 0
     newpop = []
+    fitness = []
 
-    def __init__(self, nPop, nDim, max_itarasi,Function=None, bound=None):
+    def __init__(self, nPop, nDim, max_itarasi,Cr,Mr,Function=None, bound=None):
         self.loop = max_itarasi
         self.nPop = nPop
         self.nDim = nDim
         self.bound = bound
         self.function = Function
-
+        self.mainAlgorithm(Cr,Mr)
 
     def initPosition(self):
         swarm = []
@@ -108,14 +109,22 @@ class GA:
 
     def crossover(self, p1, p2, Cr):
         offspring = []
-        c1 = rnd.rand()
-        c2 = 1-c1
         offspring1 , offspring2 = p1.copy(), p2.copy()
         if rnd.rand() < Cr:
-            offspring1 = list(np.array(offspring1)*c1)
-            offspring2 = list(np.array(offspring2)*c2)
-        self.add_newPop(offspring1)
-        self.add_newPop(offspring2)
+            c1 = rnd.rand()
+            c2 = 1 - c1
+            offspringA = list(np.array(offspring1)*c1)
+            offspringB = list(np.array(offspring2)*c2)
+            offspringC = list(np.array(offspring1)*c2)
+            offspringD = list(np.array(offspring2)*c1)
+            self.add_newPop(offspringA+offspringB)
+            self.add_newPop(offspringC)
+        else:
+            self.add_newPop(offspring1)
+            self.add_newPop(offspring2)
+
+    def kawin_polygamy(self):
+        pass
 
     def mutation(self,Mr):
         mut = math.floor(self.nPop * Mr)
@@ -158,6 +167,7 @@ class GA:
             self.mutation(mr)   #mutation
             self.replacePop()   #replace oldPop with newPop
             error.append(self.bestFitness)
+            self.fitness.append(self.bestFitness)
         plt.plot(error)
         plt.show()
             # print("best individu =",self.bestInd)

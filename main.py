@@ -6,6 +6,9 @@ if __name__ == '__main__':
 
     #List algorithm:
     # * PSO
+    # * GOA
+    # * GA
+    # * GPC
 
     #List objective Function
     # * Rosenbrock
@@ -17,4 +20,6 @@ if __name__ == '__main__':
     # * Griewank
 
     ##testing for every one
-    optimal = Optimization(algoritma='GA', objFunction='Rastrigin')
+    optimal = Optimization(algoritma='GPC', objFunction='Step')
+    fit = optimal.fitness
+    print(fit)
